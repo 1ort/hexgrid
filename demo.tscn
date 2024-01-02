@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dclmdta781w8y"]
+
+[ext_resource type="Script" path="res://hex_layout.gd" id="1_b3syg"]
+
+[node name="HexLayout" type="Node2D"]
+script = ExtResource("1_b3syg")
+_orientation = "Pointy"
+hex_size = Vector2(32, 32)

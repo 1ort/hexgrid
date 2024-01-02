@@ -5,26 +5,33 @@ var q: int
 var r: int
 var s: int
 
-static var directions = [
-	Hex.new(1, 0, -1), 
-	Hex.new(1, -1, 0), 
-	Hex.new(0, -1, 1), 
-   	Hex.new(-1, 0, 1), 
-	Hex.new(-1, 1, 0), 
-	Hex.new(0, 1, -1)
+const directions = [
+	Vector3i(1, 0, -1), 
+	Vector3i(1, -1, 0), 
+	Vector3i(0, -1, 1), 
+   	Vector3i(-1, 0, 1), 
+	Vector3i(-1, 1, 0), 
+	Vector3i(0, 1, -1)
 ]
 
 func _init(q_: int, r_: int, s_: int):
 	if not (q_ + r_ + s_ == 0):
 		push_error('Invalid cube hex coordinates') 
-	self.q = q
-	self.r = r
-	self.s = s
+	self.q = q_
+	self.r = r_
+	self.s = s_
 
 static func from_axial(q_: int, r_: int) -> Hex:
 	return Hex.new(q_, r_, -q_-r_)
 
+static func from_vector3i(v: Vector3i):
+	var res = Hex.new(v.x, v.y, v.z)
+	return res
 
+func as_vector3i() -> Vector3i:
+	var res = Vector3i(self.q, self.r, self.s)
+	return res	
+	
 func equal(other: Hex) -> bool:
 	return self.q == other.q and self.r == other.r and self.s == other.s
 
@@ -55,8 +62,10 @@ func length() -> int:
 func distance_to(other: Hex) -> int:
 	return self.subtract(other).length()
 
-static func get_direction(direction: int) -> Hex:
-	return directions[(6 + (direction % 6)) % 6]
+func get_direction(direction: int) -> Vector3i:
+	var relative = directions[(6 + (direction % 6)) % 6]
+	return relative
 
 func get_neighbor(direction: int) -> Hex:
-	return self.add(self.get_direction(direction))
+	var relative: Hex = Hex.from_vector3i(get_direction(direction))
+	return self.add(relative)

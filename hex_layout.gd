@@ -48,27 +48,30 @@ static var FLAT = HexLayoutOrientation.new(
 var _orientation: String
 @export
 var hex_size: Vector2
+@export
+var origin: Vector2
 
-var orientation: HexLayoutOrientation
+func get_orientation() -> HexLayoutOrientation:
+	return FLAT if self._orientation == 'Flat' else POINTY
 
 func _init():
-	self.orientation = FLAT if self._orientation == 'Flat' else POINTY
+	pass
 
 func hex_to_position(h: Hex) -> Vector2:
-	var M = self.orientation
+	var M = self.get_orientation()
 	var x: float = (M.f0 * h.q + M.f1 * h.r) * self.hex_size.x;
 	var y: float = (M.f2 * h.q + M.f3 * h.r) * self.hex_size.y;
-	return Vector2(x + self.position.x, y + self.position.y)
+	return Vector2(x + self.origin.x, y + self.origin.y)
 
 #func position_to_hex(p: Vector2) -> 
 # TODO: implement frac hexes
 
 func hex_corner_offset(corner: int) -> Vector2:
-	var angle = 2.0 * PI * (self.orientation.start_angle + corner) / 6
+	var angle = 2.0 * PI * (self.get_orientation().start_angle + corner) / 6
 	return Vector2(self.hex_size.x * cos(angle), self.hex_size.y * sin(angle))
 
-func polygon_corners(h: Hex) -> Array[Vector2]:
-	var corners: Array[Vector2] = Array()
+func get_polygon_corners(h: Hex) -> Array[Vector2]:
+	var corners: Array[Vector2] = []
 	var center = self.hex_to_position(h)
 	for i in 6:
 		var offset = self.hex_corner_offset(i)
@@ -77,3 +80,22 @@ func polygon_corners(h: Hex) -> Array[Vector2]:
 			center.y + offset.y
 		))
 	return corners
+
+func _draw_hex(h: Hex):
+	var corners = get_polygon_corners(h)
+	for i in 5:
+		draw_line(corners[i], corners[i+1], Color.AQUA)
+	draw_line(corners[5], corners[0], Color.AQUA)
+	
+func _draw():
+	var center = Hex.new(0, 0, 0)
+	_draw_hex(center)
+	for i in range(6):
+		var neighbor = center.get_neighbor(i)
+		_draw_hex(neighbor)
+
+func _process(_delta):
+	if not Engine.is_editor_hint():
+		return
+	queue_redraw()
+	
