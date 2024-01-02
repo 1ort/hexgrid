@@ -1,4 +1,3 @@
-@tool
 extends Node2D
 class_name HexLayout
 
@@ -73,29 +72,10 @@ func hex_corner_offset(corner: int) -> Vector2:
 func get_polygon_corners(h: Hex) -> Array[Vector2]:
 	var corners: Array[Vector2] = []
 	var center = self.hex_to_position(h)
-	for i in 6:
+	for i in 7:
 		var offset = self.hex_corner_offset(i)
 		corners.append(Vector2(
 			center.x + offset.x,
 			center.y + offset.y
 		))
 	return corners
-
-func _draw_hex(h: Hex):
-	var corners = get_polygon_corners(h)
-	for i in 5:
-		draw_line(corners[i], corners[i+1], Color.AQUA)
-	draw_line(corners[5], corners[0], Color.AQUA)
-	
-func _draw():
-	var center = Hex.new(0, 0, 0)
-	_draw_hex(center)
-	for i in range(6):
-		var neighbor = center.get_neighbor(i)
-		_draw_hex(neighbor)
-
-func _process(_delta):
-	if not Engine.is_editor_hint():
-		return
-	queue_redraw()
-	

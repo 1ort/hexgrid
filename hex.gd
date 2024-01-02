@@ -1,6 +1,11 @@
 extends Object
 class_name Hex
 
+# In theory, i could inherit this class from Vector3i, but i wanted to save 
+# params naming and prevent any possible conflicts.
+# Nevertheless, i maintained compatibility with Vector3i via from_vector3i()
+# and as_vector3i() methods
+
 var q: int
 var r: int
 var s: int
