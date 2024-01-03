@@ -10,6 +10,7 @@ var path_line: Array[Hex]
 var default_font = ThemeDB.fallback_font
 var default_font_size = ThemeDB.fallback_font_size
 
+var hex_region = HexRegion.new_hexagon(3, Hex.new(0, 0, 0))
 
 func draw_closed_line(corners: Array[Vector2], color: Color, width: float = -1.0, antialiased: bool = false):
 	for i in len(corners) - 1:
@@ -29,11 +30,11 @@ func draw_path(path: Array[Hex]):
 func _draw():
 	if self.path_line:
 		draw_path(self.path_line)
-	var center = Hex.new(0, 0, 0)
-	draw_hex(center, Color.CADET_BLUE)
-	for i in range(6):
-		var neighbor = center.get_neighbor(i)
-		draw_hex(neighbor, Color.CADET_BLUE)
+	#var center = Hex.new(0, 0, 0)
+	#draw_hex(center, Color.CADET_BLUE)
+	for hex in self.hex_region.get_hexes():
+		#var neighbor = center.get_neighbor(i)
+		draw_hex(hex, Color.CADET_BLUE)
 	
 	if self.selected_hex != null:
 		draw_hex(selected_hex, Color.ORANGE, 3, true)
