@@ -27,6 +27,8 @@ func draw_path(path: Array[Hex]):
 		draw_circle(layout.hex_to_position(hex), 8, Color.CADET_BLUE)
 	
 func _draw():
+	if self.path_line:
+		draw_path(self.path_line)
 	var center = Hex.new(0, 0, 0)
 	draw_hex(center, Color.CADET_BLUE)
 	for i in range(6):
@@ -38,9 +40,6 @@ func _draw():
 		
 	if self.cursor_hex != null:
 		draw_hex(cursor_hex, Color.WHEAT, 2, true)
-		
-	if self.path_line:
-		draw_path(self.path_line)
 
 func _process(_delta):
 	var mouse_position = get_global_mouse_position()
