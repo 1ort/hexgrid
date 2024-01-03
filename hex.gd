@@ -38,6 +38,8 @@ func as_vector3i() -> Vector3i:
 	return res	
 	
 func equal(other: Hex) -> bool:
+	if not other is Hex:
+		return false
 	return self.q == other.q and self.r == other.r and self.s == other.s
 
 func add(other: Hex) -> Hex:
@@ -74,3 +76,9 @@ func get_direction(direction: int) -> Vector3i:
 func get_neighbor(direction: int) -> Hex:
 	var relative: Hex = Hex.from_vector3i(get_direction(direction))
 	return self.add(relative)
+	
+func rotate_left() -> Hex:
+	return Hex.new(-self.s, -self.q, -self.r)
+	
+func rotate_right() -> Hex:
+	return Hex.new(-self.r, -self.s, -self.q)

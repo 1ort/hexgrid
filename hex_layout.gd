@@ -87,3 +87,19 @@ func get_polygon_corners(h: Hex) -> Array[Vector2]:
 			center.y + offset.y
 		))
 	return corners
+	
+func hex_lerp(a: Hex, b: Hex, t: float) -> FracHex:
+	return FracHex.new(
+		lerp(a.q, b.q, t),
+		lerp(a.r, b.r, t),
+		lerp(a.s, b.s, t)
+	)
+
+func hex_line(a: Hex, b: Hex) -> Array[Hex]:
+	var n = a.distance_to(b)
+	var results: Array[Hex] = []
+	var step: float = 1.0 / max(n, 1)
+	for i in n+1:
+		results.append(self.hex_lerp(a, b, step*i).round())
+	return results
+		
