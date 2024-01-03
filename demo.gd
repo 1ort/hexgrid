@@ -1,4 +1,3 @@
-@tool
 extends Node2D
 
 @onready
@@ -40,7 +39,6 @@ func _process(_delta):
 		
 func _input(event):
 	if event.is_action_pressed('ui_accept'):
-		print('pressed')
 		self.selected_hex = self.cursor_hex
 		queue_redraw()
 	
