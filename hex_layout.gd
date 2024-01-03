@@ -43,6 +43,7 @@ static var FLAT = HexLayoutOrientation.new(
 )
 #endregion
 
+
 @export_enum('Pointy', 'Flat')
 var _orientation: String
 @export
@@ -62,8 +63,15 @@ func hex_to_position(h: Hex) -> Vector2:
 	var y: float = (M.f2 * h.q + M.f3 * h.r) * self.hex_size.y;
 	return Vector2(x + self.origin.x, y + self.origin.y)
 
-#func position_to_hex(p: Vector2) -> 
-# TODO: implement frac hexes
+func position_to_hex(p: Vector2):
+	var M = self.get_orientation()
+	var pt = Vector2(
+		(p.x - self.origin.x) / self.hex_size.x,
+		(p.y - self.origin.y) / self.hex_size.y
+		)
+	var q = M.b0 * pt.x + M.b1 * pt.y
+	var r = M.b2 * pt.x + M.b3 * pt.y
+	return FracHex.new(q, r, -q - r)
 
 func hex_corner_offset(corner: int) -> Vector2:
 	var angle = 2.0 * PI * (self.get_orientation().start_angle + corner) / 6
