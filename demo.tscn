@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dclmdta781w8y"]
+[gd_scene load_steps=6 format=3 uid="uid://dclmdta781w8y"]
 
 [ext_resource type="Script" path="res://demo.gd" id="1_0shvy"]
 [ext_resource type="Script" path="res://hex_layout.gd" id="1_b3syg"]
+[ext_resource type="Script" path="res://CameraController.gd" id="3_vccir"]
 
 [sub_resource type="Gradient" id="Gradient_ie4em"]
 colors = PackedColorArray(5.8527e-05, 0.612301, 0.985805, 1, 0, 0.210769, 0.359528, 1)
@@ -17,6 +18,11 @@ ground_gradient = SubResource("Gradient_dohbo")
 
 [node name="HexLayout" type="Node2D" parent="."]
 script = ExtResource("1_b3syg")
-hex_size = Vector2(6, 6)
+hex_size = Vector2(64, 64)
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="CameraController" type="Node2D" parent="."]
+script = ExtResource("3_vccir")
+
+[node name="Camera2D" type="Camera2D" parent="CameraController"]
+zoom = Vector2(0.05, 0.05)
+position_smoothing_enabled = true

@@ -7,7 +7,6 @@ var selected_hex: Hex
 var cursor_hex: Hex
 var path_line: Array[Hex]
 
-
 var hex_radius = 64
 var elevation_k = 0.45
 var hex_region = HexRegion.new_hexagon(hex_radius, Hex.new(0, 0, 0))
@@ -37,6 +36,7 @@ func draw_hex(h: Hex, color: Color, width: float = -1.0, antialiased: bool = fal
 		else:
 			color_value = ground_gradient.sample(noise_value)
 		draw_polygon(corners, [color_value])
+		draw_closed_line(corners, color, width, antialiased)
 	else:
 		draw_closed_line(corners, color, width, antialiased)
 	
@@ -53,7 +53,9 @@ func get_hex_elevation(hex: Hex):
 	
 	var d = distance_k * distance
 	elevation = lerp(elevation, 1-(d*2), elevation_k)
-
+	
+	elevation = lerp(elevation, sign(elevation), abs(elevation)*0.4)
+	
 	return elevation
 
 
@@ -61,7 +63,7 @@ func generate_hex_noise():
 	var rng = RandomNumberGenerator.new()
 	noise.seed = rng.randi_range(0, 500)
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-	noise.fractal_octaves = 4
+	noise.fractal_octaves = 3
 	noise.frequency = 0.05
 	
 	for hex in hex_region.get_hexes():
@@ -75,7 +77,7 @@ func _init():
 
 func _draw():
 	for hex in self.hexes:
-		draw_hex(hex, Color.CADET_BLUE)
+		draw_hex(hex, Color.WHITE*0.5)
 	
 	if self.selected_hex != null:
 		draw_hex(selected_hex, Color.ORANGE, 3, true)
