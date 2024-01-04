@@ -7,33 +7,51 @@ var selected_hex: Hex
 var cursor_hex: Hex
 var path_line: Array[Hex]
 
-var default_font = ThemeDB.fallback_font
-var default_font_size = ThemeDB.fallback_font_size
+var hex_region = HexRegion.new_hexagon(32, Hex.new(0, 0, 0))
+var hexes = hex_region.get_hexes()
 
-var hex_region = HexRegion.new_hexagon(3, Hex.new(0, 0, 0))
+var noise = FastNoiseLite.new()
 
 func draw_closed_line(corners: Array[Vector2], color: Color, width: float = -1.0, antialiased: bool = false):
 	for i in len(corners) - 1:
 		draw_line(corners[i], corners[i+1], color, width, antialiased)
 	draw_line(corners[-1], corners[0], color, width, antialiased)
 
+
 func draw_hex(h: Hex, color: Color, width: float = -1.0, antialiased: bool = false):
 	var corners = layout.get_polygon_corners(h)
-	draw_closed_line(corners, color, width, antialiased)
+	if hex_region.has(h):
+		var noise_value = hex_region.get_value(h)
+		var color_value = Color.WHITE / 2.0 + Color.WHITE * noise_value
+		#print(noise_value)
+		draw_polygon(corners, [color_value])
+	else:
+		draw_closed_line(corners, color, width, antialiased)
+	
 
-	draw_string(default_font, layout.hex_to_position(h), "%d, %d, %d" % [h.q, h.r, h.s], HORIZONTAL_ALIGNMENT_LEFT, -1, default_font_size)
 
 func draw_path(path: Array[Hex]):
 	for hex in path:
 		draw_circle(layout.hex_to_position(hex), 8, Color.CADET_BLUE)
+
+func _init():
+	var rng = RandomNumberGenerator.new()
+	noise.seed = rng.randi_range(0, 500)
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	noise.fractal_octaves = 4
+	#noise.fractal_gain = 0
+	noise.frequency = 0.04
+	#noise.
 	
+	
+	for hex in hex_region.get_hexes():
+		var noise_value = noise.get_noise_3d(hex.q, hex.r, hex.s)
+		
+		
+		hex_region.set_value(hex, noise_value)
+
 func _draw():
-	if self.path_line:
-		draw_path(self.path_line)
-	#var center = Hex.new(0, 0, 0)
-	#draw_hex(center, Color.CADET_BLUE)
-	for hex in self.hex_region.get_hexes():
-		#var neighbor = center.get_neighbor(i)
+	for hex in self.hexes:
 		draw_hex(hex, Color.CADET_BLUE)
 	
 	if self.selected_hex != null:
@@ -41,6 +59,9 @@ func _draw():
 		
 	if self.cursor_hex != null:
 		draw_hex(cursor_hex, Color.WHEAT, 2, true)
+		
+	if self.path_line:
+		draw_path(self.path_line)
 
 func _process(_delta):
 	var mouse_position = get_global_mouse_position()

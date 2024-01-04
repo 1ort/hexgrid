@@ -5,11 +5,17 @@ var _hexes: Dictionary
 
 #region set funcions
 func add(h: Hex):
-	self._hexes[h.as_vector3i()] = null
+	self.set_value(h, null)
 
+func set_value(h: Hex, value: Variant):
+	self._hexes[h.as_vector3i()] = value
+	
+func get_value(h: Hex) -> Variant:
+	return self._hexes[h.as_vector3i()]
+	
 func remove(h: Hex):
 	self._hexes.erase(h.as_vector3i())
-	
+
 func has(h: Hex) -> bool:
 	return self._hexes.has(h.as_vector3i())
 #endregion
