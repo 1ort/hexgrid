@@ -22,4 +22,4 @@ func _process(delta):
 		
 	
 	var movement_vector = Input.get_vector("left", "right", "up", "down")
-	position += movement_vector * movement_speed
+	position += movement_vector * movement_speed * delta

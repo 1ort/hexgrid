@@ -9,7 +9,7 @@
 colors = PackedColorArray(5.8527e-05, 0.612301, 0.985805, 1, 0, 0.210769, 0.359528, 1)
 
 [sub_resource type="Gradient" id="Gradient_dohbo"]
-offsets = PackedFloat32Array(0, 0.0655738, 0.307692, 0.535519, 0.677596, 0.836066, 1)
+offsets = PackedFloat32Array(0, 0.0655738, 0.47541, 0.644809, 0.79235, 0.907104, 1)
 colors = PackedColorArray(0.810964, 0.727832, 0.410956, 1, 0.431698, 0.51612, 0.33012, 1, 0.11069, 0.283595, 0.2066, 1, 0.362608, 0.327266, 0.154015, 1, 0.333333, 0.431373, 0.411765, 1, 0.882353, 0.952941, 0.94902, 1, 0.882353, 0.952941, 0.94902, 1)
 
 [node name="Demo" type="Node2D"]
@@ -19,7 +19,8 @@ ground_gradient = SubResource("Gradient_dohbo")
 
 [node name="HexLayout" type="Node2D" parent="."]
 script = ExtResource("1_b3syg")
-hex_size = Vector2(128, 128)
+_orientation = "Pointy"
+hex_size = Vector2(512, 512)
 
 [node name="HexMapCanvas" type="Node2D" parent="." node_paths=PackedStringArray("layout")]
 script = ExtResource("3_4mfbu")
@@ -29,8 +30,12 @@ layout = NodePath("../HexLayout")
 script = ExtResource("3_4mfbu")
 layout = NodePath("../HexLayout")
 
+[node name="MapCanvasGroup" type="CanvasGroup" parent="."]
+
 [node name="CameraController" type="Node2D" parent="."]
 script = ExtResource("3_vccir")
+min_zoom = 0.01
+movement_speed = 16384.0
 
 [node name="Camera2D" type="Camera2D" parent="CameraController"]
 zoom = Vector2(0.05, 0.05)
