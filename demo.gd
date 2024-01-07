@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 @onready
 var layout = $HexLayout
@@ -7,70 +7,26 @@ var selected_hex: Hex
 var cursor_hex: Hex
 var path_line: Array[Hex]
 
-var hex_radius = 128
-var elevation_k = 0.45
-var hex_region = HexRegion.new_hexagon(hex_radius, Hex.new(0, 0, 0))
-var hexes = hex_region.get_hexes()
+#var hex_radius = 128
+#var elevation_k = 0.45
+
+
+var hex_region: HexRegion
+var hexes: Array[Hex]
 
 @export
 var water_gradient: Gradient
 
 
-func correct_elevation(hex: Hex, elevation: float):
-	var distance = float(hex.distance_to(Hex.new(0,0,0)))
-	var max_distance = float(hex_radius)
-	var distance_k = 1.0 / max_distance
-	var d = distance_k * distance
-	elevation = lerp(elevation, 1-(d*2), elevation_k)
-	elevation = lerp(elevation, sign(elevation), abs(elevation)*0.4)
-	return elevation
-
-#func hex_sphere_noise(q, r, s)
-
 func generate_map():
-	var noise = FastNoiseLite.new()
-	var rng = RandomNumberGenerator.new()
-	var noise_seed = rng.randi_range(0, 50000)
-	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-
+	var world_generator = HexWorldGenerator.new()
+	world_generator.elevation_noise.fractal_octaves = 4
+	world_generator.elevation_noise.frequency = 0.03
+	world_generator.humidity_noise.fractal_octaves = 2
+	world_generator.humidity_noise.frequency = 0.02
 	
-	for hex in hex_region.get_hexes():
-		#var tile_info = generate_hex_tile_info(hex, noise)
-		var elevation: float
-		var humidity: float
-		var temperature: float
-		var tile_info: TileInfo
-		
-		#elevation
-		noise.fractal_octaves = 4
-		noise.frequency = 0.03
-		noise.seed = noise_seed
-		var elevation_noise_value = noise.get_noise_3d(hex.q, hex.r, hex.s)
-		elevation = correct_elevation(hex, elevation_noise_value)
-		elevation = snapped(elevation, 0.05)
-		
-		# humidity
-		noise.fractal_octaves = 2
-		#noise.frequency = 0.2
-		noise.seed = noise_seed+1
-		var humidity_noise_value = noise.get_noise_3d(hex.q, hex.r, hex.s)
-		humidity = (humidity_noise_value / 2.0) + 0.5
-		humidity = snapped(humidity, 0.05)
-		
-		# temperature
-		noise.fractal_octaves = 2
-		#noise.frequency = 0.2
-		noise.seed = noise_seed+2
-		temperature = noise.get_noise_3d(hex.q, hex.r, hex.s)
-		temperature = snapped(temperature, 0.05)
-		
-		tile_info = TileInfo.new(
-			elevation,
-			humidity,
-			temperature
-		)
-		
-		hex_region.set_value(hex, tile_info)
+	hex_region = world_generator.generate_map()
+	hexes = hex_region.get_hexes()
 
 func _init():
 	generate_map()
@@ -105,7 +61,7 @@ func draw_overlay():
 
 
 func _process(_delta):
-	var mouse_position = get_global_mouse_position()
+	var mouse_position = self.layout.get_global_mouse_position()
 	var new_cursor_hex = self.layout.position_to_hex(mouse_position).round()
 	if not new_cursor_hex.equal(self.cursor_hex):
 		self.cursor_hex = new_cursor_hex

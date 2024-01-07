@@ -8,7 +8,7 @@
 [sub_resource type="Gradient" id="Gradient_ie4em"]
 colors = PackedColorArray(5.8527e-05, 0.612301, 0.985805, 1, 0, 0.210769, 0.359528, 1)
 
-[node name="Demo" type="Node2D"]
+[node name="Demo" type="Node"]
 script = ExtResource("1_0shvy")
 water_gradient = SubResource("Gradient_ie4em")
 
@@ -24,8 +24,6 @@ layout = NodePath("../HexLayout")
 [node name="HexOverlayCanvas" type="Node2D" parent="." node_paths=PackedStringArray("layout")]
 script = ExtResource("3_4mfbu")
 layout = NodePath("../HexLayout")
-
-[node name="MapCanvasGroup" type="CanvasGroup" parent="."]
 
 [node name="CameraController" type="Node2D" parent="."]
 script = ExtResource("3_vccir")
