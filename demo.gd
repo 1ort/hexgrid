@@ -7,15 +7,14 @@ var selected_hex: Hex
 var cursor_hex: Hex
 var path_line: Array[Hex]
 
-var hex_radius = 64
+var hex_radius = 128
 var elevation_k = 0.45
 var hex_region = HexRegion.new_hexagon(hex_radius, Hex.new(0, 0, 0))
 var hexes = hex_region.get_hexes()
 
 @export
 var water_gradient: Gradient
-@export
-var ground_gradient: Gradient	
+
 
 func correct_elevation(hex: Hex, elevation: float):
 	var distance = float(hex.distance_to(Hex.new(0,0,0)))
@@ -25,6 +24,8 @@ func correct_elevation(hex: Hex, elevation: float):
 	elevation = lerp(elevation, 1-(d*2), elevation_k)
 	elevation = lerp(elevation, sign(elevation), abs(elevation)*0.4)
 	return elevation
+
+#func hex_sphere_noise(q, r, s)
 
 func generate_map():
 	var noise = FastNoiseLite.new()
@@ -41,11 +42,12 @@ func generate_map():
 		var tile_info: TileInfo
 		
 		#elevation
-		noise.fractal_octaves = 3
-		noise.frequency = 0.05
+		noise.fractal_octaves = 4
+		noise.frequency = 0.03
 		noise.seed = noise_seed
 		var elevation_noise_value = noise.get_noise_3d(hex.q, hex.r, hex.s)
 		elevation = correct_elevation(hex, elevation_noise_value)
+		elevation = snapped(elevation, 0.05)
 		
 		# humidity
 		noise.fractal_octaves = 2
@@ -53,12 +55,14 @@ func generate_map():
 		noise.seed = noise_seed+1
 		var humidity_noise_value = noise.get_noise_3d(hex.q, hex.r, hex.s)
 		humidity = (humidity_noise_value / 2.0) + 0.5
+		humidity = snapped(humidity, 0.05)
 		
 		# temperature
 		noise.fractal_octaves = 2
 		#noise.frequency = 0.2
 		noise.seed = noise_seed+2
 		temperature = noise.get_noise_3d(hex.q, hex.r, hex.s)
+		temperature = snapped(temperature, 0.05)
 		
 		tile_info = TileInfo.new(
 			elevation,
@@ -87,12 +91,11 @@ func draw_hexes():
 			#color_value = ground_gradient.sample(tile_info.elevation)
 			color_value = tile_info.terrain_color
 			
-			
 		$HexMapCanvas.draw_hex(hex, color_value)
 
 func draw_overlay():
 	if selected_hex != null:
-		$HexOverlayCanvas.draw_hex(selected_hex, Color.ORANGE, 3, true)
+		$HexOverlayCanvas.draw_hex(selected_hex, Color.ORANGE)
 		
 	if cursor_hex != null and hex_region.has(cursor_hex):
 		$HexOverlayCanvas.draw_debug_info(cursor_hex, hex_region.get_value(cursor_hex))	

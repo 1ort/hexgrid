@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dclmdta781w8y"]
+[gd_scene load_steps=6 format=3 uid="uid://dclmdta781w8y"]
 
 [ext_resource type="Script" path="res://demo.gd" id="1_0shvy"]
 [ext_resource type="Script" path="res://hex_layout.gd" id="1_b3syg"]
@@ -8,14 +8,9 @@
 [sub_resource type="Gradient" id="Gradient_ie4em"]
 colors = PackedColorArray(5.8527e-05, 0.612301, 0.985805, 1, 0, 0.210769, 0.359528, 1)
 
-[sub_resource type="Gradient" id="Gradient_dohbo"]
-offsets = PackedFloat32Array(0, 0.0655738, 0.47541, 0.644809, 0.79235, 0.907104, 1)
-colors = PackedColorArray(0.810964, 0.727832, 0.410956, 1, 0.431698, 0.51612, 0.33012, 1, 0.11069, 0.283595, 0.2066, 1, 0.362608, 0.327266, 0.154015, 1, 0.333333, 0.431373, 0.411765, 1, 0.882353, 0.952941, 0.94902, 1, 0.882353, 0.952941, 0.94902, 1)
-
 [node name="Demo" type="Node2D"]
 script = ExtResource("1_0shvy")
 water_gradient = SubResource("Gradient_ie4em")
-ground_gradient = SubResource("Gradient_dohbo")
 
 [node name="HexLayout" type="Node2D" parent="."]
 script = ExtResource("1_b3syg")
