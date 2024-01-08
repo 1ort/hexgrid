@@ -14,12 +14,12 @@ func _ready():
 		if child is Camera2D:
 			camera = child
 
-func _process(delta):
-	if Input.is_action_just_pressed("zoom_in"):
+func _unhandled_input(event):
+	if event.is_action_pressed("zoom_in"):
 		camera.zoom = clamp(camera.zoom + Vector2.ONE*zoom_step, Vector2.ONE*min_zoom, Vector2.ONE*max_zoom)
-	if Input.is_action_just_pressed("zoom_out"):
+	if event.is_action_pressed("zoom_out"):
 		camera.zoom = clamp(camera.zoom - Vector2.ONE*zoom_step, Vector2.ONE*min_zoom, Vector2.ONE*max_zoom)
-		
-	
+
+func _process(delta):
 	var movement_vector = Input.get_vector("left", "right", "up", "down")
 	position += movement_vector * movement_speed * delta
