@@ -31,6 +31,15 @@ func generate_map():
 	
 	
 	hex_region = world_generator.generate_map()
+	var new_center = Hex.new(2*world_generator.world_radius+1, -world_generator.world_radius, -world_generator.world_radius-1)
+	for i in 6:
+		new_center = new_center.rotate_right()
+		world_generator.world_center = new_center
+		hex_region.merge(world_generator.generate_map())
+		
+		
+	#world_generator.world_center = Hex.new(65, -65, 0)
+	#hex_region.merge(world_generator.generate_map())
 	hexes = hex_region.get_hexes()
 	$HexMapCanvas.queue_redraw()
 

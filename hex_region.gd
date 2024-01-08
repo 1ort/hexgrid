@@ -18,6 +18,9 @@ func remove(h: Hex):
 
 func has(h: Hex) -> bool:
 	return self._hexes.has(h.as_vector3i())
+	
+func merge(other: HexRegion, overwrite: bool = false):
+	_hexes.merge(other._hexes, overwrite)
 #endregion
 
 func get_hexes() -> Array[Hex]:

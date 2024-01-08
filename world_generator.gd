@@ -13,7 +13,7 @@ var humidity_snap_step = 0.05
 var elevation_k: float = 0.45
 
 func correct_elevation(hex: Hex, elevation: float) -> float:
-	var distance = float(hex.distance_to(Hex.new(0,0,0)))
+	var distance = float(hex.distance_to(world_center))
 	var max_distance = float(world_radius)
 	var distance_k = 1.0 / max_distance
 	var d = distance_k * distance
