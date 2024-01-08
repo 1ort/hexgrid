@@ -7,10 +7,6 @@ var selected_hex: Hex
 var cursor_hex: Hex
 var path_line: Array[Hex]
 
-#var hex_radius = 128
-#var elevation_k = 0.45
-
-
 var hex_region: HexRegion
 var hexes: Array[Hex]
 
@@ -27,14 +23,14 @@ func generate_map():
 	
 	hex_region = world_generator.generate_map()
 	hexes = hex_region.get_hexes()
+	$HexMapCanvas.queue_redraw()
 
-func _init():
-	generate_map()
-	
+
 func _ready():
 	$HexMapCanvas.connect('draw', self.draw_hexes)
 	$HexOverlayCanvas.connect('draw', self.draw_overlay)
-
+	generate_map()
+	
 func draw_hexes():
 	for hex in self.hexes:
 		var tile_info = hex_region.get_value(hex)
@@ -44,7 +40,6 @@ func draw_hexes():
 			color_value = water_gradient.sample(-tile_info.elevation)
 			
 		else:
-			#color_value = ground_gradient.sample(tile_info.elevation)
 			color_value = tile_info.terrain_color
 			
 		$HexMapCanvas.draw_hex(hex, color_value)
@@ -74,7 +69,9 @@ func _process(_delta):
 		
 func _input(event):
 	if event.is_action_pressed('ui_accept'):
-		var _reload = get_tree().reload_current_scene()
+		generate_map()
+		
+		#var _reload = get_tree().reload_current_scene()
 	
 	if event.is_action_pressed("select_hex"):
 		selected_hex = cursor_hex

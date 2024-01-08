@@ -1,7 +1,7 @@
 extends Object
 class_name HexWorldGenerator
 
-var world_radius: int = 128
+var world_radius: int = 32
 var world_center: Hex = Hex.new(0,0,0)
 
 var world_seed: int = RandomNumberGenerator.new().randi()
@@ -10,7 +10,6 @@ var elevation_snap_step = 0.05
 
 var humidity_noise: FastNoiseLite = FastNoiseLite.new()
 var humidity_snap_step = 0.05
-
 var elevation_k: float = 0.45
 
 func correct_elevation(hex: Hex, elevation: float) -> float:
@@ -22,7 +21,6 @@ func correct_elevation(hex: Hex, elevation: float) -> float:
 	elevation = lerp(elevation, sign(elevation), abs(elevation)*0.4)
 	return elevation
 
-	
 func apply_default_noise_settings():
 	elevation_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	humidity_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
