@@ -5,39 +5,28 @@ class_name HexCanvas
 var layout: HexLayout = null
 
 func draw_closed_line(corners: Array[Vector2], color: Color, width: float = -1.0, antialiased: bool = false):
-	for i in len(corners) - 1:
-		draw_line(corners[i], corners[i+1], color, width, antialiased)
-	draw_line(corners[-1], corners[0], color, width, antialiased)
+	corners.append(corners[0])
+	draw_polyline(corners, color, width, antialiased)
 
-
-func draw_hex(h: Hex, color: Color):
+func draw_polygon_hex(h: Hex, color: Color):
 	var corners = layout.get_polygon_corners(h)
 	draw_polygon(corners, [color])
-	#draw_closed_line(corners, color + Color.WHITE * 0.5, width, antialiased)
 
-func draw_path(path: Array[Hex]):
+func draw_outline_hex(h: Hex, color: Color, width: float = -1.0, antialiased: bool = false):
+	var corners = layout.get_polygon_corners(h)
+	draw_closed_line(corners, color, width, antialiased)
+
+func draw_outline_region(region: HexRegion, color: Color, width: float = -1.0):
+	var corners: PackedVector2Array = []
+	for hex in region.get_hexes():
+		for direction in 6:
+			if not region.has(hex.get_neighbor(direction)):
+				corners.append_array(layout.get_border(hex, direction))
+	draw_multiline(corners, color, width)
+
+func draw_path(path: Array[Hex], color: Color, width: float = -1.0, antialiased: bool = false):
 	var positions: Array[Vector2] = []
 	for hex in path:
 		positions.append(layout.hex_to_position(hex))
-	draw_polyline(positions, Color.WHITE, 32)
-
-func draw_debug_info(hex: Hex, tile_info: TileInfo):
-	var default_font = ThemeDB.fallback_font
-	var font_size = (layout.hex_size).x / 4
-	
-	var corners = layout.get_polygon_corners(hex)
-	draw_closed_line(corners, Color.WHITE)
-	var hex_pos = layout.hex_to_position(hex)
-	draw_string(
-		default_font, 
-		hex_pos, 
-		"e: %f \nh: %f \nt: %f" % [
-			tile_info.elevation, 
-			tile_info.humidity, 
-			tile_info.temperature
-			],
-		 HORIZONTAL_ALIGNMENT_LEFT, 
-		-1,
-		font_size,
-)
+	draw_polyline(positions, color, width, antialiased)
 	

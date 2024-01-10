@@ -3,7 +3,7 @@ class_name HexRegion
 
 var _hexes: Dictionary
 
-#region set funcions
+#region dict functions
 func add(h: Hex):
 	self.set_value(h, null)
 
@@ -28,12 +28,13 @@ func get_hexes() -> Array[Hex]:
 	for hex_vec in self._hexes.keys():
 		hexes.append(Hex.from_vector3i(hex_vec))
 	return hexes
-		
 
-static func new_parallelogram(mode: String, q0, q1, r0, r1, s0, s1) -> HexRegion:
+
+static func new_parallelogram(mode: String, q0: int, q1: int, r0: int, r1: int, s0: int, s1: int) -> HexRegion:
+	var region = HexRegion.new()
 	if mode not in ['qr', 'qs', 'rs']:
 		push_error("mode value must be one of 'qr', 'qs', 'rs'")
-	var region = HexRegion.new()
+		return region
 	if mode == 'qr':
 		for q in range(q0, q1+1):
 			for r in range(r0, r1+1):
@@ -47,15 +48,15 @@ static func new_parallelogram(mode: String, q0, q1, r0, r1, s0, s1) -> HexRegion
 			for s in range(s0, s1+1):
 				region.add(Hex.new(-r-s, r, s))
 	return region
-	
-static func new_hexagon(N: int, center: Hex = null) -> HexRegion:
+
+static func new_hexagon(radius: int, center: Hex = null) -> HexRegion:
 	if center == null:
 		center = Hex.new(0, 0, 0)
 	
 	var region = HexRegion.new()
-	for q in range(-N, N+1):
-		var r1 = max(-N, -q - N)
-		var r2 = min(N, -q + N)
+	for q in range(-radius, radius+1):
+		var r1 = max(-radius, -q - radius)
+		var r2 = min(radius, -q + radius)
 		for r in range(r1, r2+1):
 				region.add(Hex.new(q+center.q, r+center.r, -q-r+center.s))
 	return region

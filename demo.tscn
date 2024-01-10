@@ -15,7 +15,7 @@ water_gradient = SubResource("Gradient_ie4em")
 
 [node name="HexLayout" type="Node2D" parent="."]
 script = ExtResource("1_b3syg")
-_orientation = "Pointy"
+_orientation = "Flat"
 hex_size = Vector2(512, 512)
 
 [node name="HexMapCanvas" type="Node2D" parent="." node_paths=PackedStringArray("layout")]
@@ -28,7 +28,7 @@ layout = NodePath("../HexLayout")
 
 [node name="CameraController" type="Node2D" parent="."]
 script = ExtResource("3_vccir")
-min_zoom = 0.01
+min_zoom = 0.001
 movement_speed = 16384.0
 
 [node name="Camera2D" type="Camera2D" parent="CameraController"]
@@ -36,3 +36,4 @@ zoom = Vector2(0.05, 0.05)
 position_smoothing_enabled = true
 
 [node name="GeneratorSettingsWindow" parent="." instance=ExtResource("5_pjbd7")]
+initial_position = 2

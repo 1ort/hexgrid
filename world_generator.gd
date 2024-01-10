@@ -27,7 +27,7 @@ func apply_default_noise_settings():
 	elevation_noise.seed = world_seed
 	humidity_noise.seed = world_seed + 1
 
-func generate_map() -> HexRegion:
+func generate_island() -> HexRegion:
 	apply_default_noise_settings()
 	var hex_region = HexRegion.new_hexagon(world_radius, world_center)
 	

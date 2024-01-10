@@ -76,7 +76,7 @@ func get_direction(direction: int) -> Vector3i:
 func get_neighbor(direction: int) -> Hex:
 	var relative: Hex = Hex.from_vector3i(get_direction(direction))
 	return self.add(relative)
-	
+
 func rotate_left() -> Hex:
 	return Hex.new(-self.s, -self.q, -self.r)
 	
